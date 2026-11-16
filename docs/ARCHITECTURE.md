@@ -64,7 +64,7 @@ The portal is hosted on AWS (see [nfr-hosting](https://github.com/GRISE-UPM/test
 <a id="d6"></a>
 
 ### D6. Authentication with Amazon Cognito
-- **Status**: Proposed.
+- **Status**: Accepted.
 - **Context**: Researchers must register and log in using an external identity provider, and the system is hosted entirely on AWS.
 - **Decision**: Authentication is delegated to Amazon Cognito, federated with external identity providers such as Google. The portal does not store passwords. Registration turns a researcher into an interested researcher; the role of participant researcher is granted only after an organizer validates the participation request.
 - **Consequences**: Identity management stays inside AWS, in line with [nfr-hosting](https://github.com/GRISE-UPM/testing-bias-replication-centrer/blob/main/docs/NON-FUNCTIONAL-REQUIREMENTS.md#nfr-hosting). Supporting an additional identity provider is a configuration matter, not a design change.
