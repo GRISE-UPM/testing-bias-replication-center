@@ -1,0 +1,12 @@
+:root {
+  --ink: #1b1f24;
+  --muted: #5b6573;
+  --line: #d9dee5;
+  --card: #f6f8fa;
+  --accent: #1f5fbf;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink: #e8ebef; --muted: #9aa5b4; --line: #2d343d; --card: #1a1f26; --accent: #6ea8ff; }
+  body { background: #11151a; }
+}
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); }

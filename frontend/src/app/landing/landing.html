@@ -1,0 +1,31 @@
+<section class="hero">
+  <h1>Replication Center</h1>
+  <p class="lead">
+    A joint research project of UPM and ESPE that replicates experiments in software engineering
+    across institutions.
+  </p>
+</section>
+
+<section aria-labelledby="dashboard-title">
+  <h2 id="dashboard-title" class="visually-hidden">Project at a glance</h2>
+  @if (stats(); as s) {
+    <dl class="dashboard">
+      <div class="card">
+        <dd data-testid="experiments">{{ s.experiments }}</dd>
+        <dt>Experiments</dt>
+      </div>
+      <div class="card">
+        <dd data-testid="subjects">{{ s.subjects }}</dd>
+        <dt>Subjects</dt>
+      </div>
+      <div class="card">
+        <dd data-testid="institutions">{{ s.institutions }}</dd>
+        <dt>Participant institutions</dt>
+      </div>
+    </dl>
+  } @else if (failed()) {
+    <p class="notice" role="alert">The project figures are not available right now.</p>
+  } @else {
+    <p class="notice">Loading project figures…</p>
+  }
+</section>
