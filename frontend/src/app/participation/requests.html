@@ -1,0 +1,26 @@
+<h1>Participation requests</h1>
+@if (failed()) {
+  <p class="error" role="alert">The requests could not be loaded or updated.</p>
+}
+@if (requests().length) {
+  <table>
+    <thead><tr><th>Researcher</th><th>Message</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      @for (r of requests(); track r.id) {
+        <tr>
+          <td>{{ r.email }}</td>
+          <td>{{ r.message }}</td>
+          <td><span class="status" [attr.data-status]="r.status">{{ r.status }}</span></td>
+          <td>
+            @if (r.status === 'pending') {
+              <button type="button" (click)="decide(r.id, true)">Approve</button>
+              <button type="button" class="secondary" (click)="decide(r.id, false)">Reject</button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else if (!failed()) {
+  <p class="meta">There are no requests yet.</p>
+}

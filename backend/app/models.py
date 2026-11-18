@@ -50,3 +50,15 @@ class Demo(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(200))
     url: Mapped[str] = mapped_column(String(500))
+
+
+class ParticipationRequest(Base):
+    """Request of an interested researcher to join the project (#7), validated by an organizer (#4)."""
+
+    __tablename__ = "participation_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    email: Mapped[str] = mapped_column(String(200), index=True)
+    message: Mapped[str] = mapped_column(String(2000), default="")
+    status: Mapped[str] = mapped_column(String(20), default="pending")  # pending | approved | rejected
+    decided_by: Mapped[str | None] = mapped_column(String(200), nullable=True)

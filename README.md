@@ -27,6 +27,7 @@ npm test
 ## Implemented stories
 - [#3](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/3) Simplified dashboard on the landing page (`GET /api/stats`, no authentication).
 - [#1](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/1) Experiment details for interested researchers (`GET /api/experiment`, `POST /api/experiment/email`). The email is only logged until Amazon SES is integrated.
+- [#7](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/7) and [#4](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/4) Request to join the project and its validation by organizers (`/api/participation-requests`).
 
 ## Authentication
 Authentication will use Amazon Cognito (decision D6). Until then, `AUTH_MODE=dev` lets the backend identify the user from the `X-Dev-User: email:role` header (roles: `interested`, `participant`, `organizer`). Without that variable nobody is authenticated. Never enable it in a deployed environment.

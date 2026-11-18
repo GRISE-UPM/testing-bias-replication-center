@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PublicStats(BaseModel):
@@ -35,3 +35,19 @@ class ExperimentOut(BaseModel):
     description: str
     papers: list[PaperOut]
     demos: list[DemoOut]
+
+
+class JoinRequestIn(BaseModel):
+    message: str = Field(default="", max_length=2000)
+
+
+class JoinRequestOut(BaseModel):
+    id: int
+    email: str
+    message: str
+    status: str
+    decided_by: str | None = None
+
+
+class DecisionIn(BaseModel):
+    approve: bool
