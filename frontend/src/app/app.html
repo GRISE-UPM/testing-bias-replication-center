@@ -1,5 +1,14 @@
 <header class="site-header">
   <a class="brand" routerLink="/">Replication Center</a>
+  <nav>
+    @if (auth.user(); as u) {
+      <a routerLink="/experiment">Experiment</a>
+      <span class="who">{{ u.email }} ({{ u.role }})</span>
+      <button type="button" (click)="logout()">Log out</button>
+    } @else {
+      <a routerLink="/login">Log in</a>
+    }
+  </nav>
 </header>
 <main>
   <router-outlet />

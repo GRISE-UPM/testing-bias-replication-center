@@ -1,0 +1,49 @@
+@if (details(); as d) {
+  <h1>{{ d.title }}</h1>
+  <p class="lead">{{ d.summary }}</p>
+
+  <section class="papers" aria-labelledby="papers-title">
+    <h2 id="papers-title">Papers from the project</h2>
+    @if (d.papers.length) {
+      <ul>
+        @for (p of d.papers; track p.url) {
+          <li>
+            <a [href]="p.url" target="_blank" rel="noopener">{{ p.title }}</a>
+            <span class="meta">{{ p.authors }} · {{ p.venue }} · {{ p.year }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="meta">No papers have been published yet.</p>
+    }
+  </section>
+
+  <section>
+    <h2>About the experiment</h2>
+    <p class="description">{{ d.description }}</p>
+  </section>
+
+  @if (d.demos.length) {
+    <section>
+      <h2>Demos</h2>
+      <ul>
+        @for (demo of d.demos; track demo.url) {
+          <li><a [href]="demo.url" target="_blank" rel="noopener">{{ demo.title }}</a></li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section>
+    <button type="button" (click)="emailMe()">Send this information to my email</button>
+    @if (emailStatus() === 'sent') {
+      <p role="status">Sent to the email associated with your account.</p>
+    } @else if (emailStatus() === 'error') {
+      <p role="alert">The email could not be sent.</p>
+    }
+  </section>
+} @else if (failed()) {
+  <p role="alert">The experiment details are not available right now.</p>
+} @else {
+  <p>Loading…</p>
+}

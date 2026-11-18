@@ -1,0 +1,8 @@
+.box { max-width: 26rem; padding-top: 2.5rem; }
+.warn { background: #fff4d6; color: #5c4400; border: 1px solid #e6c866; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.9rem; }
+form { display: grid; gap: 1rem; }
+label { display: grid; gap: 0.3rem; }
+input, select { padding: 0.5rem; font: inherit; }
+button { padding: 0.6rem 1rem; font: inherit; background: var(--accent); color: white; border: 0; border-radius: 0.5rem; cursor: pointer; }
+.error { color: #b3261e; }
+@media (prefers-color-scheme: dark) { .warn { background: #3a3012; color: #f3dc8f; border-color: #7a6a22; } .error { color: #ff8a80; } }
