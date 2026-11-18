@@ -1,3 +1,7 @@
-.site-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--line); }
+.site-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .brand { font-weight: 700; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+nav { display: flex; align-items: center; gap: 1rem; }
+nav a { color: var(--accent); }
+.who { color: var(--muted); font-size: 0.9rem; }
+nav button { font: inherit; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 0.4rem; padding: 0.25rem 0.6rem; cursor: pointer; }
 main { max-width: 56rem; margin: 0 auto; padding: 0 1.5rem 3rem; }

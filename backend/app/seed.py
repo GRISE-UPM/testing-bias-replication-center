@@ -3,7 +3,7 @@
 Usage:  python -m app.seed
 """
 from .database import Base, SessionLocal, engine
-from .models import Replication
+from .models import Demo, ExperimentDetails, Paper, Replication
 
 SAMPLE = [
     ("Sample replication 1", "Institution A", 30),
@@ -19,4 +19,16 @@ if __name__ == "__main__":
             db.commit()
             print(f"Loaded {len(SAMPLE)} sample replications.")
         else:
-            print("Database already has data; nothing loaded.")
+            print("Replications already loaded.")
+        if db.query(ExperimentDetails).count() == 0:
+            db.add(
+                ExperimentDetails(
+                    title="SAMPLE experiment title",
+                    summary="Sample summary: replace with the real description of the experiment.",
+                    description="Sample description. This placeholder text is not real project content.",
+                )
+            )
+            db.add(Paper(title="Sample paper", authors="A. Author", venue="Sample venue", year=2026, url="https://example.org/paper"))
+            db.add(Demo(title="Sample demo", url="https://example.org/demo"))
+            db.commit()
+            print("Loaded sample experiment details.")
