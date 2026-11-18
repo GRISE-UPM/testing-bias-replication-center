@@ -1,0 +1,14 @@
+h1 { margin: 2rem 0 0.5rem; }
+.lead { color: var(--muted); max-width: 40rem; }
+form { display: grid; gap: 1rem; max-width: 32rem; margin: 1.5rem 0; }
+textarea { font: inherit; padding: 0.5rem; }
+button { padding: 0.45rem 0.9rem; font: inherit; background: var(--accent); color: white; border: 0; border-radius: 0.5rem; cursor: pointer; margin-right: 0.4rem; }
+button.secondary { background: none; color: var(--ink); border: 1px solid var(--line); }
+.error { color: #b3261e; }
+.meta { color: var(--muted); margin-left: 0.5rem; }
+.status { text-transform: capitalize; font-weight: 600; }
+.status[data-status='approved'] { color: #1a7f37; }
+.status[data-status='rejected'] { color: #b3261e; }
+.status[data-status='pending'] { color: #9a6700; }
+table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid var(--line); vertical-align: top; }

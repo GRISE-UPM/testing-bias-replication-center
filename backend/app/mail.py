@@ -6,7 +6,7 @@ in memory, so that behaviour can be developed and tested without sending anythin
 import logging
 from dataclasses import dataclass
 
-log = logging.getLogger("mail")
+log = logging.getLogger("uvicorn.error")  # shown in the server console
 
 
 @dataclass(frozen=True)

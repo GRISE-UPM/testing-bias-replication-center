@@ -3,6 +3,8 @@
   <nav>
     @if (auth.user(); as u) {
       <a routerLink="/experiment">Experiment</a>
+      @if (u.role === 'interested') { <a routerLink="/join">Join the project</a> }
+      @if (u.role === 'organizer') { <a routerLink="/requests">Requests</a> }
       <span class="who">{{ u.email }} ({{ u.role }})</span>
       <button type="button" (click)="logout()">Log out</button>
     } @else {

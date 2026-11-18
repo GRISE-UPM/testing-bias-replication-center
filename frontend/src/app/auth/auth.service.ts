@@ -9,6 +9,7 @@ export interface SessionUser {
 }
 
 const KEY = 'dev-user';
+export const ROLE_RANK: Record<Role, number> = { interested: 1, participant: 2, organizer: 3 };
 
 /**
  * TEMPORARY development session. It only remembers the user chosen on the dev login page.

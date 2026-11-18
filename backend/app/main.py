@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from . import mail, models
 from .auth import Role, User, require_role
 from .database import Base, engine, get_db
+from .participation import router as participation_router
 from .schemas import ExperimentOut, MeResponse, PublicStats
 
 app = FastAPI(title="Replication Center API")
@@ -15,11 +16,12 @@ app = FastAPI(title="Replication Center API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:4200").split(","),
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
 Base.metadata.create_all(engine)
+app.include_router(participation_router)
 
 
 @app.get("/api/health")

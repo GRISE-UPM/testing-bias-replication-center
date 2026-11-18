@@ -1,0 +1,30 @@
+<h1>Join the project</h1>
+<p class="lead">
+  Request access to the replication materials and results. An organizer reviews every request and
+  you will receive an email with the decision.
+</p>
+
+@if (!open()) {
+  <form (submit)="$event.preventDefault(); submit(msg.value)">
+    <label>
+      Why do you want to join? (optional)
+      <textarea #msg rows="4" maxlength="2000"></textarea>
+    </label>
+    <button type="submit">Send request</button>
+  </form>
+}
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}
+
+@if (requests().length) {
+  <h2>Your requests</h2>
+  <ul>
+    @for (r of requests(); track r.id) {
+      <li>
+        <span class="status" [attr.data-status]="r.status">{{ r.status }}</span>
+        @if (r.message) { <span class="meta">{{ r.message }}</span> }
+      </li>
+    }
+  </ul>
+}
