@@ -6,8 +6,9 @@ from sqlalchemy import distinct, func, select
 from sqlalchemy.orm import Session
 
 from . import models
+from .auth import Role, User, require_role
 from .database import Base, engine, get_db
-from .schemas import PublicStats
+from .schemas import MeResponse, PublicStats
 
 app = FastAPI(title="Replication Center API")
 
@@ -38,3 +39,9 @@ def public_stats(db: Session = Depends(get_db)) -> PublicStats:
         )
     ).one()
     return PublicStats(experiments=experiments, subjects=subjects, institutions=institutions)
+
+
+@app.get("/api/me", response_model=MeResponse)
+def me(user: User = Depends(require_role(Role.INTERESTED))) -> MeResponse:
+    """Identity and role of the current user. Requires authentication."""
+    return MeResponse(email=user.email, role=user.role.name.lower())

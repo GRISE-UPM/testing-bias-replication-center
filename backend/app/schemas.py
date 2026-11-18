@@ -7,3 +7,8 @@ class PublicStats(BaseModel):
     experiments: int
     subjects: int
     institutions: int
+
+
+class MeResponse(BaseModel):
+    email: str
+    role: str
