@@ -1,0 +1,4 @@
+aws-scripts/cognito.generated.env
+.aws/
+*.pem
+*.cer
