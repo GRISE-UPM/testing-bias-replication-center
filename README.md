@@ -30,4 +30,4 @@ npm test
 - [#7](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/7) and [#4](https://github.com/GRISE-UPM/testing-bias-replication-center/issues/4) Request to join the project and its validation by organizers (`/api/participation-requests`).
 
 ## Authentication
-Authentication will use Amazon Cognito (decision D6). Until then, `AUTH_MODE=dev` lets the backend identify the user from the `X-Dev-User: email:role` header (roles: `interested`, `participant`, `organizer`). Without that variable nobody is authenticated. Never enable it in a deployed environment.
+Authentication uses Amazon Cognito (decision D6): the SPA signs in at the Cognito Hosted UI (authorization code + PKCE) and the API validates the Access Token (`AUTH_MODE=cognito`; see `aws-scripts/README.md`). For work without AWS, `AUTH_MODE=dev` lets the backend identify the user from the `X-Dev-User: email:role` header (roles: `interested`, `participant`, `organizer`). Without that variable nobody is authenticated. Never enable it in a deployed environment.

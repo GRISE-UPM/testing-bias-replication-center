@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Crea (o borra) el User Pool, el App Client y el dominio Hosted UI de Cognito
 # para el portal. Pensado para AWS Academy Learner Lab (us-east-1).
-# Uso:  ./aws-scripts/cognito.sh create | delete | show
+# Uso:  ./aws-scripts/cognito.sh create | groups | organizer <correo> | show | delete
 # En Windows, ejecutar desde Git Bash. No imprime credenciales.
 set -euo pipefail
 
@@ -62,6 +62,27 @@ COGNITO_ISSUER=https://cognito-idp.$REGION.amazonaws.com/$POOL_ID
 COGNITO_DOMAIN=https://$DOMAIN.auth.$REGION.amazoncognito.com
 EOT
   echo "Configuracion escrita en $OUT"
+  groups
+}
+
+# Grupos del portal: organizer (organizadores) y participant (investigadores validados).
+groups() {
+  POOL_ID=$(pool_id)
+  [ "$POOL_ID" = "None" ] && { echo "Primero ejecuta 'create'."; exit 1; }
+  for G in organizer participant; do
+    aws cognito-idp create-group --region "$REGION" --user-pool-id "$POOL_ID" \
+      --group-name "$G" >/dev/null 2>&1 && echo "Grupo creado: $G" || echo "Grupo ya existe: $G"
+  done
+}
+
+# Convierte en organizador a un usuario que ya se registro (el correo es su nombre de usuario).
+organizer() {
+  EMAIL="${1:?Uso: $0 organizer <correo>}"
+  POOL_ID=$(pool_id)
+  [ "$POOL_ID" = "None" ] && { echo "Primero ejecuta 'create'."; exit 1; }
+  aws cognito-idp admin-add-user-to-group --region "$REGION" --user-pool-id "$POOL_ID" \
+    --username "$EMAIL" --group-name organizer
+  echo "$EMAIL es ahora organizador. Debe cerrar sesion y volver a entrar."
 }
 
 delete() {
@@ -78,7 +99,9 @@ delete() {
 
 case "${1:-}" in
   create) create ;;
+  groups) groups ;;
+  organizer) organizer "${2:-}" ;;
   delete) delete ;;
   show) [ -f "$OUT" ] && cat "$OUT" || echo "Aun no hay configuracion generada." ;;
-  *) echo "Uso: $0 create|delete|show"; exit 1 ;;
+  *) echo "Uso: $0 create|groups|organizer <correo>|show|delete"; exit 1 ;;
 esac

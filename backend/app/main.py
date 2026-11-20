@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import distinct, func, select
 from sqlalchemy.orm import Session
 
-from . import mail, models
+from . import cognito, mail, models
 from .auth import Role, User, require_role
 from .database import Base, engine, get_db
 from .participation import router as participation_router
@@ -41,6 +41,23 @@ def public_stats(db: Session = Depends(get_db)) -> PublicStats:
         )
     ).one()
     return PublicStats(experiments=experiments, subjects=subjects, institutions=institutions)
+
+
+@app.get("/api/auth-config")
+def auth_config():
+    """How the SPA must sign in. Public: it holds identifiers, never secrets."""
+    mode = os.getenv("AUTH_MODE", "off")
+    if mode == "cognito":
+        cfg = cognito.settings()
+        if cfg is None:
+            raise HTTPException(status_code=503, detail="Cognito is not configured")
+        return {
+            "mode": "cognito",
+            "issuer": cfg.issuer,
+            "clientId": cfg.client_id,
+            "domain": cfg.domain,
+        }
+    return {"mode": "dev" if mode == "dev" else "off"}
 
 
 @app.get("/api/me", response_model=MeResponse)
