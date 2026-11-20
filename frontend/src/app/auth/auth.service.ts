@@ -86,7 +86,7 @@ export class AuthService {
     this.manager = new UserManager({
       authority: c.issuer,
       client_id: c.clientId,
-      redirect_uri: window.location.origin + '/',
+      redirect_uri: window.location.origin, // must equal the callback URL registered in the App Client (no trailing slash)
       response_type: 'code',
       scope: 'openid email profile',
       userStore: new WebStorageStateStore({ store: window.localStorage }),
