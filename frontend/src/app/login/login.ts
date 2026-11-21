@@ -3,17 +3,22 @@ import { Router } from '@angular/router';
 import { AuthService, Role } from '../auth/auth.service';
 
 @Component({
-  selector: 'app-dev-login',
-  templateUrl: './dev-login.html',
-  styleUrl: './dev-login.css',
+  selector: 'app-login',
+  templateUrl: './login.html',
+  styleUrl: './login.css',
 })
-export class DevLogin {
-  private readonly auth = inject(AuthService);
+export class Login {
+  protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
   protected readonly error = signal('');
   protected readonly roles: Role[] = ['interested', 'participant', 'organizer'];
 
+  protected signIn(): void {
+    void this.auth.loginWithCognito();
+  }
+
+  /** Development login only (backend AUTH_MODE=dev). */
   protected submit(email: string, role: string): void {
     this.error.set('');
     if (!email.trim()) {

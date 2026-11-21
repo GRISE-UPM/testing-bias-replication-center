@@ -1,0 +1,32 @@
+<section class="box">
+  <h1>Log in</h1>
+  @switch (auth.mode()) {
+    @case ('cognito') {
+      <p>Sign in with your account. You will be taken to the Amazon Cognito sign-in page.</p>
+      <button type="button" (click)="signIn()">Sign in</button>
+    }
+    @case ('dev') {
+      <p class="warn" role="note">
+        Development login only. It is available because the backend runs with AUTH_MODE=dev.
+      </p>
+      <form (submit)="$event.preventDefault(); submit(email.value, role.value)">
+        <label>Email <input #email type="email" name="email" autocomplete="off" /></label>
+        <label>
+          Role
+          <select #role name="role">
+            @for (r of roles; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </label>
+        <button type="submit">Log in</button>
+      </form>
+      @if (error()) {
+        <p class="error" role="alert">{{ error() }}</p>
+      }
+    }
+    @default {
+      <p class="error" role="alert">Sign-in is not available: the backend has no authentication configured.</p>
+    }
+  }
+</section>

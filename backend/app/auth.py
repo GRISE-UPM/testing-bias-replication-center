@@ -1,18 +1,29 @@
 """Roles and access control.
 
-The portal delegates authentication to Amazon Cognito (decision D6). Until that
-integration exists, a TEMPORARY development mode identifies the user from the
-``X-Dev-User`` header (``email:role``). It is enabled only with ``AUTH_MODE=dev``
-and must never be enabled in a deployed environment.
+The portal delegates authentication to Amazon Cognito (decision D6).
 
-Only ``current_user`` knows how the user is identified. When Cognito is added, it
-will validate the token there; endpoints and role checks do not change.
+``AUTH_MODE`` selects how the user is identified:
+
+* ``cognito``: the ``Authorization: Bearer`` Access Token is validated (see ``cognito.py``).
+  Role: group ``organizer`` -> ORGANIZER; group ``participant`` or an approved
+  participation request -> PARTICIPANT; any other signed-in user -> INTERESTED.
+* ``dev``: development only, the ``X-Dev-User`` header (``email:role``) is trusted.
+  It must never be enabled in a deployed environment.
+* anything else (default): nobody is authenticated.
+
+Only ``current_user`` knows how the user is identified; endpoints and role checks
+do not change.
 """
 import os
 from dataclasses import dataclass
 from enum import IntEnum
 
 from fastapi import Depends, HTTPException, Request
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from . import cognito, models
+from .database import get_db
 
 
 class Role(IntEnum):
@@ -43,10 +54,49 @@ def _dev_user(request: Request) -> User | None:
         return None
 
 
-def current_user(request: Request) -> User | None:
+def _bearer_token(request: Request) -> str | None:
+    scheme, _, token = request.headers.get("Authorization", "").partition(" ")
+    return token.strip() if scheme.lower() == "bearer" and token.strip() else None
+
+
+def _cognito_user(request: Request, db: Session) -> User | None:
+    token = _bearer_token(request)
+    if token is None:
+        return None
+    try:
+        claims = cognito.verify_access_token(token)
+        email = cognito.email_for(token, claims["sub"])
+    except cognito.CognitoError:
+        return None
+    groups = set(claims.get("cognito:groups", []))
+    if "organizer" in groups:
+        role = Role.ORGANIZER
+    elif "participant" in groups or _has_approved_request(db, email):
+        role = Role.PARTICIPANT
+    else:
+        role = Role.INTERESTED
+    return User(email=email, role=role)
+
+
+def _has_approved_request(db: Session, email: str) -> bool:
+    return (
+        db.scalars(
+            select(models.ParticipationRequest).where(
+                models.ParticipationRequest.email == email,
+                models.ParticipationRequest.status == "approved",
+            )
+        ).first()
+        is not None
+    )
+
+
+def current_user(request: Request, db: Session = Depends(get_db)) -> User | None:
     """The authenticated user, or None for a visitor."""
-    if os.getenv("AUTH_MODE", "off") == "dev":
+    mode = os.getenv("AUTH_MODE", "off")
+    if mode == "dev":
         return _dev_user(request)
+    if mode == "cognito":
+        return _cognito_user(request, db)
     return None
 
 
